@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Usage example of idn-area API",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start:dev": "webpack serve --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js"
