@@ -15,50 +15,10 @@
       <div class="container-fluid d-flex flex-row flex-wrap p-0">
         <div class="col-xl-6 col-12 py-3 px-4">
           <h2 class="mb-4">Form Select</h2>
-          <div class="mb-3">
-            <label for="province" class="form-label">Province</label>
-            <select class="form-select" id="province">
-              <datalist id="provinces">
-                <option selected>Select a province</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </datalist>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="regency" class="form-label">Regency</label>
-            <select class="form-select" id="regency" disabled>
-              <datalist id="regencies">
-                <option selected>Select a regency</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </datalist>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="district" class="form-label">District</label>
-            <select class="form-select" id="district" disabled>
-              <datalist id="districts">
-                <option selected>Select a district</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </datalist>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="village" class="form-label">Village</label>
-            <select class="form-select" id="village" disabled>
-              <datalist id="villages">
-                <option selected>Select a village</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </datalist>
-            </select>
-          </div>
+          <form-select label="Province" id="province" disabled></form-select>
+          <form-select label="Regency" id="regency" disabled></form-select>
+          <form-select label="District" id="district" disabled></form-select>
+          <form-select label="Village" id="village" disabled></form-select>
         </div>
         <div class="col-xl-6 col-12 py-3 px-4">
           <h2 class="mb-4">Search By Name</h2>
