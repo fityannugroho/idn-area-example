@@ -15,17 +15,13 @@ const main = () => {
 
   const loadDistrictOptions = async (regency) => {
     $(document).trigger(LOAD_DISTRICT_OPTIONS_EVENT);
-
     try {
-      const formSelectDistrict = $('form-select#district').get(FIRST_ELEMENT);
-      const districtsInRegency = await DataSource.getDistrictsByRegency(regency.code, 'name');
-
-      formSelectDistrict
-        .setDisabled(false)
-        .setOptions(districtsInRegency)
+      $('form-select#district').get(FIRST_ELEMENT)
+        .setOptions(await DataSource.getDistrictsByRegency(regency.code, 'name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadVillageOptions)
         .setEmptyOption('Select a district')
+        .setDisabled(false)
         .render();
     } catch (error) {
       // TODO: Set error in district options.
@@ -35,17 +31,13 @@ const main = () => {
 
   const loadRegencyOptions = async (province) => {
     $(document).trigger(LOAD_REGENCY_OPTIONS_EVENT);
-
     try {
-      const formSelectRegency = $('form-select#regency').get(FIRST_ELEMENT);
-      const regenciesInProvince = await DataSource.getRegenciesByProvince(province.code, 'name');
-
-      formSelectRegency
-        .setDisabled(false)
-        .setOptions(regenciesInProvince)
+      $('form-select#regency').get(FIRST_ELEMENT)
+        .setOptions(await DataSource.getRegenciesByProvince(province.code, 'name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadDistrictOptions)
         .setEmptyOption('Select a regency')
+        .setDisabled(false)
         .render();
     } catch (error) {
       // TODO: Set error in regency options.
@@ -55,17 +47,13 @@ const main = () => {
 
   const loadProvinceOptions = async () => {
     $(document).trigger(LOAD_PROVINCE_OPTIONS_EVENT);
-
     try {
-      const formSelectProvince = $('form-select#province').get(FIRST_ELEMENT);
-      const provinces = await DataSource.getProvinces('name');
-
-      formSelectProvince
-        .setDisabled(false)
-        .setOptions(provinces)
+      $('form-select#province').get(FIRST_ELEMENT)
+        .setOptions(await DataSource.getProvinces('name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadRegencyOptions)
         .setEmptyOption('Select a province')
+        .setDisabled(false)
         .render();
     } catch (error) {
       // TODO: Set error in province options.

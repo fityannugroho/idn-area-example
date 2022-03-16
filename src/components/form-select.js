@@ -128,8 +128,10 @@ class FormSelect extends HTMLElement {
     // Render options.
     const $selectElement = $(this).find(`#${this._selectId}`);
     this._options.forEach((opt) => {
-      const $newOpt = $('<option>').html(opt[this._optionValueKey]).on('click', () => this._onOptionClicked(opt));
-      $selectElement.append($newOpt);
+      $selectElement.append(
+        $('<option>').html(opt[this._optionValueKey])
+          .on('click', () => this._onOptionClicked(opt)),
+      );
     });
 
     // Set on empty option is clicked.
