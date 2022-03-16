@@ -4,11 +4,19 @@ class FormSelect extends HTMLElement {
   connectedCallback() {
     this.id = $(this).attr('id') || '';
     this.label = $(this).attr('label') || null;
-    this.emptyOption = $(this).attr('empty-opt');
+    this.emptyOption = $(this).attr('empty-opt') || '';
     this.disabled = $(this).attr('disabled') !== undefined;
     this._options = [];
 
     this.render();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    this[name] = newValue;
+  }
+
+  static get observedAttributes() {
+    return ['id', 'label', 'empty-opt', 'disabled'];
   }
 
   /**
@@ -20,12 +28,52 @@ class FormSelect extends HTMLElement {
     return `select${id.replace(/^\w/, (c) => c.toUpperCase())}`;
   }
 
+  // -------- SETTER --------
   /**
    * @param {string} id
    */
   set id(id) {
     // Set the select id every time the form `id` value is changed.
     this._selectId = FormSelect.generateSelectId(id);
+  }
+
+  // -------- METHOD --------
+  /**
+   * Set the id of form select.
+   * @param {string} id The id.
+   */
+  setId(id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Set the label of form select.
+   * @param {string} label The label.
+   */
+  setLabel(label) {
+    this.label = label;
+    return this;
+  }
+
+  /**
+   * Set the empty option value. If value is `null`, the empty option will be removed.
+   * @param {string} value The empty option value.
+   * @param {() => any} onClickCallback Set the callback when the empty option is clicked.
+   */
+  setEmptyOption(value = '', onClickCallback = () => {}) {
+    this.emptyOption = value;
+    this._onEmptyOptionClicked = onClickCallback;
+    return this;
+  }
+
+  /**
+   * Disable the form select.
+   * @param {boolean} disabled Set `false` to enable.
+   */
+  setDisabled(disabled = true) {
+    this.disabled = disabled;
+    return this;
   }
 
   /**
@@ -72,7 +120,7 @@ class FormSelect extends HTMLElement {
       <div class="mb-3 has-validation">
         <label for="${this._selectId}" class="form-label">${this.label}</label>
         <select class="form-select" id="${this._selectId}" ${this.disabled ? 'disabled' : ''}>
-          ${this.emptyOption === undefined ? '' : `<option class="empty-option" selected>${this.emptyOption}</option>`}
+          ${this.emptyOption === '' ? '' : `<option class="empty-option" selected>${this.emptyOption}</option>`}
         </select>
       </div>
     `);
@@ -86,6 +134,13 @@ class FormSelect extends HTMLElement {
 
     // Set on empty option is clicked.
     $(this).find('.empty-option').on('click', this._onEmptyOptionClicked);
+  }
+
+  /**
+   * Reset the form select options and render it.
+   */
+  resetOptions() {
+    this.setOptions([]).setDisabled().setEmptyOption().render();
   }
 }
 
