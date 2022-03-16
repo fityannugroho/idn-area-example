@@ -62,4 +62,20 @@ export default class DataSource {
     }
     return resJson;
   }
+
+  /**
+   * Get all villages in a district.
+   * @param {string} districtCode The district code.
+   * @param {string} sortBy Sort the villages by its `code` or `name`. The default is `code`.
+   * @param {string} sortOrder `asc` or `desc`. The default is `asc`.
+   * @returns The array of villages.
+   */
+  static async getVillagesByDistrict(districtCode, sortBy = 'code', sortOrder = 'asc') {
+    const res = await fetch(`${this.BASE_URL}/districts/${districtCode}/villages${DataSource.makeSortQuery(sortBy, sortOrder)}`);
+    const resJson = await res.json();
+    if (!res.ok) {
+      return Promise.reject(new Error(resJson.message.join(', ')));
+    }
+    return resJson;
+  }
 }

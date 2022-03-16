@@ -10,7 +10,18 @@ const main = () => {
   const LOAD_VILLAGE_OPTIONS_EVENT = 'load-village-options';
 
   const loadVillageOptions = async (district) => {
-    $(document).trigger(LOAD_VILLAGE_OPTIONS_EVENT);
+    $(document).trigger(LOAD_VILLAGE_OPTIONS_EVENT); try {
+      $('form-select#village').get(FIRST_ELEMENT)
+        .setOptions(await DataSource.getVillagesByDistrict(district.code, 'name'))
+        .setOptionValueKey('name')
+        .setOnOptionClicked(() => {})
+        .setEmptyOption('Select a village')
+        .setDisabled(false)
+        .render();
+    } catch (error) {
+      // TODO: Set error in village options.
+      console.error(error);
+    }
   };
 
   const loadDistrictOptions = async (regency) => {
