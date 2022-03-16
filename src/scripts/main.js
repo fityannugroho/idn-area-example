@@ -25,7 +25,7 @@ const main = () => {
     console.error(message);
   };
 
-  DataSource.getProvinces()
+  DataSource.getProvinces('name')
     .then(renderProvinceOptions)
     .catch(renderProvinceOptionsError);
 };
