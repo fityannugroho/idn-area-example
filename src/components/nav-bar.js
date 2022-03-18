@@ -28,7 +28,9 @@ class NavBar extends HTMLElement {
       </div>
     `);
 
-    $(this).addClass('navbar navbar-expand-lg navbar-light');
+    $(this).addClass('navbar navbar-expand-lg navbar-light')
+      .css('background-color', 'white')
+      .css('box-shadow', '0 2px 4px #eeeeee');
   }
 }
 
