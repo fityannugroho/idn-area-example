@@ -91,7 +91,7 @@ class SearchBar extends HTMLElement {
         <input type="text" class="form-control ${this._errorMessage === '' ? '' : 'is-invalid'}" id="${this._searchBarId}" placeholder="${this.placeholder}" value="${this.value}">
         <label for="${this._searchBarId}">${this.label}</label>
         ${this._errorMessage === '' ? '' : `<div class="invalid-feedback">${this._errorMessage}</div>`}
-        <div id="${this._searchBarId}Helper" class="form-text">
+        <div id="${this._searchBarId}Helper" class="form-text d-flex align-items-center gap-2">
           <span>${this.helper}</span>
           ${this._isOnLoad ? '<i class="fa-solid fa-spinner fa-spin"></i>' : ''}
         </div>
