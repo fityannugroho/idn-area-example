@@ -21,5 +21,6 @@
       }
     ],
     "no-underscore-dangle": "off"
-  }
+  },
+  "ignorePatterns": "dist"
 }
