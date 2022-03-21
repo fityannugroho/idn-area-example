@@ -7,6 +7,7 @@ class FormSelect extends HTMLElement {
     this.emptyOption = $(this).attr('empty-opt') || '';
     this.disabled = $(this).attr('disabled') !== undefined;
     this._options = [];
+    this._errorMessage = '';
 
     this.render();
   }
@@ -122,17 +123,35 @@ class FormSelect extends HTMLElement {
   }
 
   /**
+   * Set an error message.
+   * @param {string} message The error message.
+   */
+  setError(message) {
+    this._errorMessage = message;
+    return this;
+  }
+
+  /**
+   * Clear the error message.
+   */
+  resetError() {
+    this._errorMessage = '';
+    return this;
+  }
+
+  /**
    * Render the element.
    */
   render() {
     $(this).html(`
-      <div class="mb-3 has-validation">
+      <div class="mb-3">
         <label for="${this._selectId}" class="form-label">${this.label}</label>
         <div class="input-group">
-          <select class="form-select" id="${this._selectId}" ${this.disabled ? 'disabled' : ''}>
+          <select class="form-select ${this._errorMessage === '' ? '' : 'is-invalid'}" id="${this._selectId}" ${this.disabled ? 'disabled' : ''}>
             ${this.emptyOption === '' ? '' : `<option class="empty-option" selected>${this.emptyOption}</option>`}
           </select>
           ${this._isOnLoad ? '<span class="input-group-text"><i class="fa-solid fa-spinner fa-spin"></i></span>' : ''}
+          ${this._errorMessage === '' ? '' : `<div class="invalid-feedback">${this._errorMessage}</div>`}
         </div>
       </div>
     `);

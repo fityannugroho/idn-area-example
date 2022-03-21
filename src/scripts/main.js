@@ -12,69 +12,78 @@ const main = () => {
   const LOAD_VILLAGE_OPTIONS_EVENT = 'load-village-options';
 
   const loadVillageOptions = async (district) => {
-    $(document).trigger(LOAD_VILLAGE_OPTIONS_EVENT); try {
-      $('form-select#village').get(FIRST_ELEMENT)
+    const villageSelect = $('form-select#village').get(FIRST_ELEMENT);
+    $(document).trigger(LOAD_VILLAGE_OPTIONS_EVENT);
+
+    try {
+      villageSelect
+        .resetError()
         .setOptions(await DataSource.getVillagesByDistrict(district.code, 'name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(() => {})
         .setEmptyOption('Select a village')
-        .setDisabled(false)
-        .setOnLoad(false)
-        .render();
+        .setDisabled(false);
     } catch (error) {
-      // TODO: Set error in village options.
-      console.error(error);
+      villageSelect.setError(error.message);
+    } finally {
+      villageSelect.setOnLoad(false).render();
     }
   };
 
   const loadDistrictOptions = async (regency) => {
+    const districtSelect = $('form-select#district').get(FIRST_ELEMENT);
     $(document).trigger(LOAD_DISTRICT_OPTIONS_EVENT);
+
     try {
-      $('form-select#district').get(FIRST_ELEMENT)
+      districtSelect
+        .resetError()
         .setOptions(await DataSource.getDistrictsByRegency(regency.code, 'name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadVillageOptions)
         .setEmptyOption('Select a district')
-        .setDisabled(false)
-        .setOnLoad(false)
-        .render();
+        .setDisabled(false);
     } catch (error) {
-      // TODO: Set error in district options.
-      console.error(error);
+      districtSelect.setError(error.message);
+    } finally {
+      districtSelect.setOnLoad(false).render();
     }
   };
 
   const loadRegencyOptions = async (province) => {
+    const regencySelect = $('form-select#regency').get(FIRST_ELEMENT);
     $(document).trigger(LOAD_REGENCY_OPTIONS_EVENT);
+
     try {
-      $('form-select#regency').get(FIRST_ELEMENT)
+      regencySelect
+        .resetError()
         .setOptions(await DataSource.getRegenciesByProvince(province.code, 'name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadDistrictOptions)
         .setEmptyOption('Select a regency')
-        .setDisabled(false)
-        .setOnLoad(false)
-        .render();
+        .setDisabled(false);
     } catch (error) {
-      // TODO: Set error in regency options.
-      console.error(error);
+      regencySelect.setError(error.message);
+    } finally {
+      regencySelect.setOnLoad(false).render();
     }
   };
 
   const loadProvinceOptions = async () => {
+    const provinceSelect = $('form-select#province').get(FIRST_ELEMENT);
     $(document).trigger(LOAD_PROVINCE_OPTIONS_EVENT);
+
     try {
-      $('form-select#province').get(FIRST_ELEMENT)
+      provinceSelect
+        .resetError()
         .setOptions(await DataSource.getProvinces('name'))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadRegencyOptions)
         .setEmptyOption('Select a province')
-        .setDisabled(false)
-        .setOnLoad(false)
-        .render();
+        .setDisabled(false);
     } catch (error) {
-      // TODO: Set error in province options.
-      console.error(error);
+      provinceSelect.setError(error.message);
+    } finally {
+      provinceSelect.setOnLoad(false).render();
     }
   };
 
