@@ -2,6 +2,7 @@ import $ from 'jquery';
 import '../components/form-select.js';
 import '../components/form-radio.js';
 import '../components/search-bar.js';
+import '../components/search-results.js';
 import DataSource from './data-source.js';
 
 const main = () => {
@@ -98,11 +99,7 @@ const main = () => {
 
       try {
         const results = await DataSource.getByName(nameValue, area, 'name');
-        const $searchResults = $('#searchByNameResult').html('');
-
-        results.forEach((result) => {
-          $searchResults.append($('<p>').html(`${result.name} (${result.code})`));
-        });
+        $('search-results').get(FIRST_ELEMENT).renderResults(results);
       } catch (error) {
         $searchInput.get(FIRST_ELEMENT).setError(error.message);
       } finally {
