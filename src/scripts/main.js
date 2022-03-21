@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import '../components/form-select.js';
+import '../components/form-radio.js';
 import DataSource from './data-source.js';
 
 const main = () => {
@@ -76,6 +77,24 @@ const main = () => {
     }
   };
 
+  const onSearchByName = async () => {
+    const area = $('form-radio[name="searchBy"][checked]').val();
+    const nameInput = $('#searchByName').val();
+
+    if (area !== '' && nameInput.length >= 3) {
+      try {
+        const results = await DataSource.getByName(nameInput, area, 'name');
+        const $searchResults = $('#searchByNameResult').html('');
+
+        results.forEach((result) => {
+          $searchResults.append($('<p>').html(`${result.name} (${result.code})`));
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   // -------- Event Handler --------
   $(document).on(LOAD_PROVINCE_OPTIONS_EVENT, () => {
     $('form-select#province').get(FIRST_ELEMENT).setOnLoad().render();
@@ -97,6 +116,12 @@ const main = () => {
   $(document).on(LOAD_VILLAGE_OPTIONS_EVENT, () => {
     // Reset the village options.
     $('form-select#village').get(FIRST_ELEMENT).setOnLoad().resetOptions();
+  });
+
+  let timer = null;
+  $('#searchByName').on('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(onSearchByName, 500);
   });
 
   // -------- Executor --------
