@@ -8,6 +8,7 @@ class SearchBar extends HTMLElement {
     this.helper = $(this).attr('helper') || '';
     this.value = $(this).attr('value') || '';
     this._isOnLoad = false;
+    this._errorMessage = '';
 
     this.render();
   }
@@ -67,11 +68,29 @@ class SearchBar extends HTMLElement {
     return this;
   }
 
+  /**
+   * Set an error message.
+   * @param {string} message The error message.
+   */
+  setError(message) {
+    this._errorMessage = message;
+    return this;
+  }
+
+  /**
+   * Clear the error message.
+   */
+  resetError() {
+    this._errorMessage = '';
+    return this;
+  }
+
   render() {
     $(this).html(`
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="${this._searchBarId}" placeholder="${this.placeholder}" value="${this.value}">
+        <input type="text" class="form-control ${this._errorMessage === '' ? '' : 'is-invalid'}" id="${this._searchBarId}" placeholder="${this.placeholder}" value="${this.value}">
         <label for="${this._searchBarId}">${this.label}</label>
+        ${this._errorMessage === '' ? '' : `<div class="invalid-feedback">${this._errorMessage}</div>`}
         <div id="${this._searchBarId}Helper" class="form-text">
           <span>${this.helper}</span>
           ${this._isOnLoad ? '<i class="fa-solid fa-spinner fa-spin"></i>' : ''}

@@ -85,7 +85,7 @@ const main = () => {
 
     if (area !== '' && nameValue.length >= 3) {
       // Show loading spinner.
-      $searchInput.get(FIRST_ELEMENT).setOnLoad().render();
+      $searchInput.get(FIRST_ELEMENT).resetError().setOnLoad().render();
 
       try {
         const results = await DataSource.getByName(nameValue, area, 'name');
@@ -94,11 +94,11 @@ const main = () => {
         results.forEach((result) => {
           $searchResults.append($('<p>').html(`${result.name} (${result.code})`));
         });
-
+      } catch (error) {
+        $searchInput.get(FIRST_ELEMENT).setError(error.message);
+      } finally {
         // Disable loading spinner.
         $searchInput.get(FIRST_ELEMENT).setOnLoad(false).render();
-      } catch (error) {
-        console.error(error);
       }
     }
   };
