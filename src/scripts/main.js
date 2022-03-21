@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import '../components/form-select.js';
 import '../components/form-radio.js';
+import '../components/search-bar.js';
 import DataSource from './data-source.js';
 
 const main = () => {
@@ -78,17 +79,24 @@ const main = () => {
   };
 
   const onSearchByName = async () => {
+    const $searchInput = $('#searchByName');
     const area = $('form-radio[name="searchBy"][checked]').val();
-    const nameInput = $('#searchByName').val();
+    const nameValue = $searchInput.val();
 
-    if (area !== '' && nameInput.length >= 3) {
+    if (area !== '' && nameValue.length >= 3) {
+      // Show loading spinner.
+      $searchInput.get(FIRST_ELEMENT).setOnLoad().render();
+
       try {
-        const results = await DataSource.getByName(nameInput, area, 'name');
+        const results = await DataSource.getByName(nameValue, area, 'name');
         const $searchResults = $('#searchByNameResult').html('');
 
         results.forEach((result) => {
           $searchResults.append($('<p>').html(`${result.name} (${result.code})`));
         });
+
+        // Disable loading spinner.
+        $searchInput.get(FIRST_ELEMENT).setOnLoad(false).render();
       } catch (error) {
         console.error(error);
       }

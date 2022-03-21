@@ -28,11 +28,7 @@
             <form-radio name="searchBy" id="districtOption" label="District" value="districts"></form-radio>
             <form-radio name="searchBy" id="villageOption" label="Village" value="villages"></form-radio>
           </div>
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="searchByName" placeholder="Input the name">
-            <label for="searchByName">Input the name</label>
-            <div id="searchByNameHelp" class="form-text">Type min. 3 characters to start searching.</div>
-          </div>
+          <search-bar id="searchByName" label="Input the name" placeholder="Input the name" helper="Type min. 3 characters to start searching"></search-bar>
           <div id="searchByNameResult" class="mb-3">
           </div>
         </div>
