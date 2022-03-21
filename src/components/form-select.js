@@ -113,15 +113,27 @@ class FormSelect extends HTMLElement {
   }
 
   /**
+   * If set to `true`, the select element will show a loading spinner.
+   * @param {boolean} isOnLoad The default is `true`.
+   */
+  setOnLoad(isOnLoad = true) {
+    this._isOnLoad = isOnLoad;
+    return this;
+  }
+
+  /**
    * Render the element.
    */
   render() {
     $(this).html(`
       <div class="mb-3 has-validation">
         <label for="${this._selectId}" class="form-label">${this.label}</label>
-        <select class="form-select" id="${this._selectId}" ${this.disabled ? 'disabled' : ''}>
-          ${this.emptyOption === '' ? '' : `<option class="empty-option" selected>${this.emptyOption}</option>`}
-        </select>
+        <div class="input-group">
+          <select class="form-select" id="${this._selectId}" ${this.disabled ? 'disabled' : ''}>
+            ${this.emptyOption === '' ? '' : `<option class="empty-option" selected>${this.emptyOption}</option>`}
+          </select>
+          ${this._isOnLoad ? '<span class="input-group-text"><i class="fa-solid fa-spinner fa-spin"></i></span>' : ''}
+        </div>
       </div>
     `);
 

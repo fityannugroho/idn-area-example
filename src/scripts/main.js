@@ -17,6 +17,7 @@ const main = () => {
         .setOnOptionClicked(() => {})
         .setEmptyOption('Select a village')
         .setDisabled(false)
+        .setOnLoad(false)
         .render();
     } catch (error) {
       // TODO: Set error in village options.
@@ -33,6 +34,7 @@ const main = () => {
         .setOnOptionClicked(loadVillageOptions)
         .setEmptyOption('Select a district')
         .setDisabled(false)
+        .setOnLoad(false)
         .render();
     } catch (error) {
       // TODO: Set error in district options.
@@ -49,6 +51,7 @@ const main = () => {
         .setOnOptionClicked(loadDistrictOptions)
         .setEmptyOption('Select a regency')
         .setDisabled(false)
+        .setOnLoad(false)
         .render();
     } catch (error) {
       // TODO: Set error in regency options.
@@ -65,6 +68,7 @@ const main = () => {
         .setOnOptionClicked(loadRegencyOptions)
         .setEmptyOption('Select a province')
         .setDisabled(false)
+        .setOnLoad(false)
         .render();
     } catch (error) {
       // TODO: Set error in province options.
@@ -73,22 +77,26 @@ const main = () => {
   };
 
   // -------- Event Handler --------
+  $(document).on(LOAD_PROVINCE_OPTIONS_EVENT, () => {
+    $('form-select#province').get(FIRST_ELEMENT).setOnLoad().render();
+  });
+
   $(document).on(LOAD_REGENCY_OPTIONS_EVENT, () => {
     // Reset the regency, district, and village options.
-    $('form-select#regency').get(FIRST_ELEMENT).resetOptions();
+    $('form-select#regency').get(FIRST_ELEMENT).setOnLoad().resetOptions();
     $('form-select#district').get(FIRST_ELEMENT).resetOptions();
     $('form-select#village').get(FIRST_ELEMENT).resetOptions();
   });
 
   $(document).on(LOAD_DISTRICT_OPTIONS_EVENT, () => {
     // Reset the district and village options.
-    $('form-select#district').get(FIRST_ELEMENT).resetOptions();
+    $('form-select#district').get(FIRST_ELEMENT).setOnLoad().resetOptions();
     $('form-select#village').get(FIRST_ELEMENT).resetOptions();
   });
 
   $(document).on(LOAD_VILLAGE_OPTIONS_EVENT, () => {
     // Reset the village options.
-    $('form-select#village').get(FIRST_ELEMENT).resetOptions();
+    $('form-select#village').get(FIRST_ELEMENT).setOnLoad().resetOptions();
   });
 
   // -------- Executor --------
