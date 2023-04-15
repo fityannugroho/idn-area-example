@@ -1,3 +1,14 @@
+/**
+ * @type RequestInit
+ */
+const fetchInit = {
+  mode: 'cors',
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
+};
+
 export default class DataSource {
   static BASE_URL = 'http://13.213.50.245:3000';
 
@@ -25,7 +36,10 @@ export default class DataSource {
    * @returns The array of province.
    */
   static async getProvinces(sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(`${this.BASE_URL}/provinces${DataSource.makeSortQuery(sortBy, sortOrder)}`);
+    const res = await fetch(
+      `${this.BASE_URL}/provinces${DataSource.makeSortQuery(sortBy, sortOrder)}`,
+      fetchInit,
+    );
     if (!res.ok) {
       return Promise.reject(new Error('Failed to get provinces'));
     }
@@ -41,7 +55,10 @@ export default class DataSource {
    * @returns The array of regency.
    */
   static async getRegenciesByProvince(provinceCode, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(`${this.BASE_URL}/provinces/${provinceCode}/regencies${DataSource.makeSortQuery(sortBy, sortOrder)}`);
+    const res = await fetch(
+      `${this.BASE_URL}/provinces/${provinceCode}/regencies${DataSource.makeSortQuery(sortBy, sortOrder)}`,
+      fetchInit,
+    );
     const resJson = await res.json();
     if (!res.ok) {
       return Promise.reject(new Error(resJson.message.join(', ')));
@@ -58,7 +75,10 @@ export default class DataSource {
    * @returns The array of district.
    */
   static async getDistrictsByRegency(regencyCode, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(`${this.BASE_URL}/regencies/${regencyCode}/districts${DataSource.makeSortQuery(sortBy, sortOrder)}`);
+    const res = await fetch(
+      `${this.BASE_URL}/regencies/${regencyCode}/districts${DataSource.makeSortQuery(sortBy, sortOrder)}`,
+      fetchInit,
+    );
     const resJson = await res.json();
     if (!res.ok) {
       return Promise.reject(new Error(resJson.message.join(', ')));
@@ -75,7 +95,10 @@ export default class DataSource {
    * @returns The array of villages.
    */
   static async getVillagesByDistrict(districtCode, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(`${this.BASE_URL}/districts/${districtCode}/villages${DataSource.makeSortQuery(sortBy, sortOrder)}`);
+    const res = await fetch(
+      `${this.BASE_URL}/districts/${districtCode}/villages${DataSource.makeSortQuery(sortBy, sortOrder)}`,
+      fetchInit,
+    );
     const resJson = await res.json();
     if (!res.ok) {
       return Promise.reject(new Error(resJson.message.join(', ')));
@@ -94,7 +117,10 @@ export default class DataSource {
    * @returns The array of provinces, regencies, districts, or villages.
    */
   static async getByName(name, area, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(`${this.BASE_URL}/${area}${this.makeSortQuery(sortBy, sortOrder)}&name=${name}`);
+    const res = await fetch(
+      `${this.BASE_URL}/${area}${this.makeSortQuery(sortBy, sortOrder)}&name=${name}`,
+      fetchInit,
+    );
     const resJson = await res.json();
     if (!res.ok) {
       return Promise.reject(new Error(resJson.message.join(', ')));
