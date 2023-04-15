@@ -1,5 +1,5 @@
 export default class DataSource {
-  static BASE_URL = 'https://idn-area.herokuapp.com';
+  static BASE_URL = 'http://13.213.50.245:3000';
 
   static OK_STATUS = 200;
 
