@@ -10,7 +10,7 @@ const fetchInit = {
 };
 
 export default class DataSource {
-  static BASE_URL = 'https://idn-area.up.railway.app';
+  static BASE_URL = 'https://idn-area.cyclic.app';
 
   static OK_STATUS = 200;
 
