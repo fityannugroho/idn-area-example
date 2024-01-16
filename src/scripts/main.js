@@ -3,7 +3,7 @@ import '../components/form-select.js';
 import '../components/form-radio.js';
 import '../components/search-bar.js';
 import '../components/search-results.js';
-import DataSource from './data-source.js';
+import { getData } from './data-source.js';
 
 const main = () => {
   const FIRST_ELEMENT = 0;
@@ -19,7 +19,10 @@ const main = () => {
     try {
       villageSelect
         .resetError()
-        .setOptions(await DataSource.getVillagesByDistrict(district.code, 'name'))
+        .setOptions(await getData('villages', {
+          parentCode: district.code,
+          sortBy: 'name',
+        }))
         .setOptionValueKey('name')
         .setOnOptionClicked(() => {})
         .setEmptyOption('Select a village')
@@ -38,7 +41,10 @@ const main = () => {
     try {
       districtSelect
         .resetError()
-        .setOptions(await DataSource.getDistrictsByRegency(regency.code, 'name'))
+        .setOptions(await getData('districts', {
+          parentCode: regency.code,
+          sortBy: 'name',
+        }))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadVillageOptions)
         .setEmptyOption('Select a district')
@@ -57,7 +63,10 @@ const main = () => {
     try {
       regencySelect
         .resetError()
-        .setOptions(await DataSource.getRegenciesByProvince(province.code, 'name'))
+        .setOptions(await getData('regencies', {
+          parentCode: province.code,
+          sortBy: 'name',
+        }))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadDistrictOptions)
         .setEmptyOption('Select a regency')
@@ -76,7 +85,7 @@ const main = () => {
     try {
       provinceSelect
         .resetError()
-        .setOptions(await DataSource.getProvinces('name'))
+        .setOptions(await getData('provinces', { sortBy: 'name' }))
         .setOptionValueKey('name')
         .setOnOptionClicked(loadRegencyOptions)
         .setEmptyOption('Select a province')
@@ -98,7 +107,10 @@ const main = () => {
       $searchInput.get(FIRST_ELEMENT).resetError().setOnLoad().render();
 
       try {
-        const results = await DataSource.getByName(nameValue, area, 'name');
+        const results = await getData(area, {
+          name: nameValue,
+          sortBy: 'name',
+        });
         $('search-results').get(FIRST_ELEMENT).renderResults(results);
       } catch (error) {
         $searchInput.get(FIRST_ELEMENT).setError(error.message);

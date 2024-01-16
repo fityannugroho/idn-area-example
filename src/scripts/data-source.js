@@ -9,122 +9,59 @@ const fetchInit = {
   },
 };
 
-export default class DataSource {
-  static BASE_URL = 'https://idn-area.cyclic.app';
+const parentCodeQueryKey = {
+  regencies: 'provinceCode',
+  islands: 'regencyCode',
+  districts: 'regencyCode',
+  villages: 'districtCode',
+};
 
-  static OK_STATUS = 200;
+const baseUrl = 'https://idn-area.up.railway.app';
 
-  static BAD_REQUEST_STATUS = 400;
+/**
+ * Get the data from the API.
+ * @param {'provinces' | 'regencies' | 'districts' | 'villages' | 'islands'} area
+ *   The area to get the data from.
+ * @param {{
+ *   parentCode?: string;
+ *   name?: string;
+ *   limit?: number;
+ *   sortBy?: string;
+ *   sortOrder?: 'asc'| 'desc';
+ *   page?: number;
+ * }} query The query params. The `limit` is 100 by default.
+ * @returns
+ */
+// eslint-disable-next-line import/prefer-default-export
+export async function getData(area, query) {
+  const url = new URL(`${baseUrl}/${area}`);
 
-  static NOT_FOUND_STATUS = 404;
-
-  /**
-   * Make a sort query.
-   * @param {'code' | 'name'} sortBy Sort  by its `code` or `name`.
-   * @param {'asc' | 'desc'} sortOrder`asc` or `desc`.
-   * @returns The sort query.
-   */
-  static makeSortQuery(sortBy, sortOrder) {
-    return `?sortBy=${sortBy}&sortOrder=${sortOrder}`;
-  }
-
-  /**
-   * Get all provinces
-   * @param {'code' | 'name'} sortBy Sort the province by its `code` or `name`.
-   * The default is `code`.
-   * @param {'asc' | 'desc'} sortOrder`asc` or `desc`.
-   * @returns The array of province.
-   */
-  static async getProvinces(sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(
-      `${this.BASE_URL}/provinces${DataSource.makeSortQuery(sortBy, sortOrder)}`,
-      fetchInit,
+  if (query?.parentCode && area !== 'provinces') {
+    url.searchParams.append(
+      parentCodeQueryKey[area],
+      query.parentCode,
     );
-    if (!res.ok) {
-      return Promise.reject(new Error('Failed to get provinces'));
-    }
-    return res.json();
   }
 
-  /**
-   * Get all regencies in a province.
-   * @param {string} provinceCode The province code.
-   * @param {'code' | 'name'} sortBy Sort the regencies by its `code` or `name`.
-   * The default is `code`.
-   * @param {'asc' | 'desc'} sortOrder`asc` or `desc`.
-   * @returns The array of regency.
-   */
-  static async getRegenciesByProvince(provinceCode, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(
-      `${this.BASE_URL}/provinces/${provinceCode}/regencies${DataSource.makeSortQuery(sortBy, sortOrder)}`,
-      fetchInit,
-    );
-    const resJson = await res.json();
-    if (!res.ok) {
-      return Promise.reject(new Error(resJson.message.join(', ')));
-    }
-    return resJson;
+  if (query?.name) {
+    url.searchParams.append('name', query.name);
   }
 
-  /**
-   * Get all districts in a regency.
-   * @param {string} regencyCode The regency code.
-   * @param {'code' | 'name'} sortBy Sort the districts by its `code` or `name`.
-   * The default is `code`.
-   * @param {'asc' | 'desc'} sortOrder`asc` or `desc`. The default is `asc`.
-   * @returns The array of district.
-   */
-  static async getDistrictsByRegency(regencyCode, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(
-      `${this.BASE_URL}/regencies/${regencyCode}/districts${DataSource.makeSortQuery(sortBy, sortOrder)}`,
-      fetchInit,
-    );
-    const resJson = await res.json();
-    if (!res.ok) {
-      return Promise.reject(new Error(resJson.message.join(', ')));
-    }
-    return resJson;
+  if (query?.sortBy) {
+    url.searchParams.append('sortBy', query.sortBy);
   }
 
-  /**
-   * Get all villages in a district.
-   * @param {string} districtCode The district code.
-   * @param {'code' | 'name'} sortBy Sort the villages by its `code` or `name`.
-   * The default is `code`.
-   * @param {'asc' | 'desc'} sortOrder`asc` or `desc`. The default is `asc`.
-   * @returns The array of villages.
-   */
-  static async getVillagesByDistrict(districtCode, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(
-      `${this.BASE_URL}/districts/${districtCode}/villages${DataSource.makeSortQuery(sortBy, sortOrder)}`,
-      fetchInit,
-    );
-    const resJson = await res.json();
-    if (!res.ok) {
-      return Promise.reject(new Error(resJson.message.join(', ')));
-    }
-    return resJson;
+  if (query?.page) {
+    url.searchParams.append('page', query.page.toString());
   }
 
-  /**
-   * Get provinces, regencies, districts, or villages by its name.
-   * @param {string} name The keyword of name.
-   * @param {'provinces' | 'regencies' | 'districts' | 'villages'} area The area scope.
-   * Options: `provinces`, `regencies`, `districts`, `villages`.
-   * @param {'code' | 'name'} sortBy Sort the results by its `code` or `name`.
-   * The default is `code`.
-   * @param {'asc' | 'desc'} sortOrder`asc` or `desc`. The default is `asc`.
-   * @returns The array of provinces, regencies, districts, or villages.
-   */
-  static async getByName(name, area, sortBy = 'code', sortOrder = 'asc') {
-    const res = await fetch(
-      `${this.BASE_URL}/${area}${this.makeSortQuery(sortBy, sortOrder)}&name=${name}`,
-      fetchInit,
-    );
-    const resJson = await res.json();
-    if (!res.ok) {
-      return Promise.reject(new Error(resJson.message.join(', ')));
-    }
-    return resJson;
+  url.searchParams.append('limit', query.limit?.toString() ?? '100');
+
+  const res = await fetch(url, fetchInit);
+
+  if (!res.ok) {
+    return Promise.reject(new Error(`Failed to fetch ${area} data`));
   }
+
+  return (await res.json()).data;
 }
